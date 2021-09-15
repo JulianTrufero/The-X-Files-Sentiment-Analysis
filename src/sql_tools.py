@@ -4,7 +4,7 @@ import pandas as pd
 def damepersonaje(personaje):
     query = f"""
 SELECT * FROM Characters
-WHERE Personaje = '{personaje}'
+WHERE `Character` = '{personaje}'
 """
     datos = pd.read_sql_query(query,engine)
 
