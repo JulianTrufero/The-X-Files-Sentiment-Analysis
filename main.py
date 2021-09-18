@@ -8,12 +8,19 @@ app = Flask(__name__)
 def inicial():
     return "hola mundo"
 
-@app.route("/personajes/<name>")
+@app.route("/character/<name>")
 def personaje(name):
     print(name)
-    personaje = sql.damepersonaje(name)
+    personaje = sql.choosecharacter(name)
     return personaje
 
+@app.route("/phrases/<number>")
+def phrases(number):
+    print(number)
+    phrase = sql.quote(number)
+    return phrase
+
+
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
 
