@@ -14,6 +14,9 @@ def personaje(name):
     personaje = sql.choosecharacter(name)
     return personaje
 
+#FRASES
+#Todas las frases, frases por episodio, frases por personaje, 
+
 @app.route("/phrases/<number>")
 def phrases(number):
     print(number)
