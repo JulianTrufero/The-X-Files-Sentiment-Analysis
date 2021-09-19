@@ -5,21 +5,20 @@ import src.sql_tools as sql
 app = Flask(__name__)
 
 #FRASES
-#Todas las frases, 
-#frases por episodio
+#Phrases by episodes
 
 @app.route("/phrasesbyepisode/<name>")
 def phrase_by_epi(name):
     phrases = sql.quote_e(name)
     return phrases
 
-#frases por personaje
+#Phrases by character
 @app.route("/phrasesbycharacter/<name>")
 def phrase_by_charac(name):
     phrases = sql.quote_c(name)
     return phrases
 
-#frases por personaje y episodio
+#Phrases by character and episode
 """
 @app.route("/phrases/<number>")
 def phrases(character, episode):

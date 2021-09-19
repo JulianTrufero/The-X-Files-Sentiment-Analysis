@@ -50,7 +50,7 @@ def quote_e(episode):
         query = list(engine.execute(f"SELECT idEpisodes FROM Episodes WHERE Episode = '{episode}'"))
         e = query[0][0]
     else: 
-        return "The character doesn't exist or match with the ones in the db"
+        return "The episode doesn't exist or match with the ones in the db"
     
     query = f"""
     SELECT * FROM Phrases
