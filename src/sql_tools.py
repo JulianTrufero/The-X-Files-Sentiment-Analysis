@@ -1,21 +1,85 @@
 from config.config import engine
 import pandas as pd
 
-def choosecharacter(character):
+#General check function
+def check(something,string):
+    """
+    """
+    if something == "episode":
+        query = list(engine.execute(f"SELECT Episode FROM Episodes WHERE Episode = '{string}'"))
+        if len(query) > 0:
+            return True
+        else:
+            return False
+        
+    elif something == "character":
+        query = list(engine.execute(f"SELECT `Character` FROM Characters WHERE `Character` = '{string}'"))
+        if len(query) > 0:
+            return True
+        else:
+            return False
+    
+    elif something == "phrase":
+        query = list(engine.execute(f"SELECT Phrase FROM Phrases WHERE Phrase = '{string}'"))
+        if len(query) > 0:
+            return True
+        else:
+            return False
+
+#Phrases by character
+
+def quote_c(character):
+    if check('character', character):
+        query = list(engine.execute(f"SELECT idCharacters FROM Characters WHERE `Character` = '{character}'"))
+        c = query[0][0]
+    else: 
+        return "The character doesn't exist or match with the ones in the db"
+    
     query = f"""
-SELECT * FROM Characters
-WHERE `Character` = '{character}'
-"""
+    SELECT * FROM Phrases
+    WHERE (Characters_idCharacters = {c})
+    """
     datos = pd.read_sql_query(query,engine)
 
     return datos.to_json(orient="records")
 
-def quote(episodenumber):
-    query = f"""
-SELECT * FROM Phrases
-WHERE (Characters_idCharacters = 1 AND Episodes_idEpisodes = {int(episodenumber)})
-"""
-    datos = pd.read_sql_query(query,engine)
+#Phrases by episode
 
+def quote_e(episode):
+    if check('episode', episode):
+        query = list(engine.execute(f"SELECT idEpisodes FROM Episodes WHERE Episode = '{episode}'"))
+        e = query[0][0]
+    else: 
+        return "The character doesn't exist or match with the ones in the db"
+    
+    query = f"""
+    SELECT * FROM Phrases
+    WHERE (Episodes_idEpisodes = {e})
+    """
+    datos = pd.read_sql_query(query,engine)
+    
     return datos.to_json(orient="records")
 
+
+#Phrases by character and episode
+
+def quote_ce(character, episode):
+    if check('character', character):
+        query = list(engine.execute(f"SELECT idCharacters FROM Characters WHERE `Character` = '{character}'"))
+        c = query[0][0]
+    else: 
+        return "The character doesn't exist or match with the ones in the db"
+    
+    if check('episode', episode):
+        query = list(engine.execute(f"SELECT idEpisodes FROM Episodes WHERE Episode = '{episode}'"))
+        e = query[0][0]
+    else: 
+        return "The episode doesn't exist or match with the ones in the db"
+    
+    query = f"""
+    SELECT * FROM Phrases
+    WHERE (Characters_idCharacters = {c} AND Episodes_idEpisodes = {e})
+    """
+    datos = pd.read_sql_query(query,engine)
+    
+    return datos.to_json(orient="records")
