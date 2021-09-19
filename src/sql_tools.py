@@ -105,3 +105,24 @@ def insertphrase(episode,character,phrase):
         return 'This episode already exists'
         
     return f"The phrase has been correctly included in the db: {episode},{character},{phrase}"
+
+#Modify phrase
+
+def modifyphrase(episode,character,phrase,modification):
+    
+    if check('episode', episode):
+        if check('character', character):
+            if check('phrase', phrase):
+                query = list(engine.execute(f"SELECT idPhrases FROM Phrases WHERE Phrase = '{phrase}'"))
+                p = query[0][0]
+                engine.execute(f""" UPDATE Phrases
+                                    SET Phrase = '{modification}'
+                                    WHERE idPhrases = {p} ;""")
+            else:
+                return 'This phrase doesn`t exist'
+        else:
+            return 'This character doesn`t exist'
+    else:
+        return 'This episode doesn`t exist'
+        
+    return f"The phrase has been correctly modified in the db: {episode},{character},{modification}"

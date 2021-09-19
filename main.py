@@ -36,6 +36,16 @@ def newphrase():
 
     return sql.insertphrase(episode,character,phrase)
 
+#Modify phrase
+
+@app.route("/modphrase", methods=["POST"])
+def modphrase():
+    phrase = request.form.get("phrase")
+    character = request.form.get("character")
+    episode = request.form.get("episode")
+    modification = request.form.get("modification")
+
+    return sql.modifyphrase(episode,character,phrase,modification)
 
 if __name__ == '__main__':
     app.run(debug=True)
