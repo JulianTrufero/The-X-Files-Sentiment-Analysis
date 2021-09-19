@@ -83,3 +83,25 @@ def quote_ce(character, episode):
     datos = pd.read_sql_query(query,engine)
     
     return datos.to_json(orient="records")
+
+#Insert phrase
+
+def insertphrase(episode,character,phrase):
+    
+    if check('episode', episode) == False:
+        engine.execute(f""" INSERT INTO Episodes (Episode) VALUES ('{episode}'); """)
+        
+        if check('character', character) == False:
+            engine.execute(f""" INSERT INTO Characters (`Character`) VALUES ('{character}'); """)
+        
+        query = list(engine.execute(f"SELECT idCharacters FROM Characters WHERE `Character` = '{character}'"))
+        c = query[0][0]
+        query = list(engine.execute(f"SELECT idEpisodes FROM Episodes WHERE Episode = '{episode}'"))
+        e = query[0][0]
+        
+        engine.execute(f""" INSERT INTO Phrases (Phrase, Characters_idCharacters, Episodes_idEpisodes) 
+                            VALUES ("{phrase}", {c}, {e});""")
+    else:
+        return 'This episode already exists'
+        
+    return f"The phrase has been correctly included in the db: {episode},{character},{phrase}"

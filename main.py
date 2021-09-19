@@ -26,6 +26,16 @@ def phrases(character, episode):
     phrase = sql.quote_ce(character, episode)
     return phrase
 """
+#Insert phrase
+
+@app.route("/newphrase", methods=["POST"])
+def newphrase():
+    phrase = request.form.get("phrase")
+    character = request.form.get("character")
+    episode = request.form.get("episode")
+
+    return sql.insertphrase(episode,character,phrase)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
