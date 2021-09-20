@@ -1,8 +1,15 @@
 
 from flask import Flask, request
 import src.sql_tools as sql
+import markdown.extensions.fenced_code
 
 app = Flask(__name__)
+
+@app.route('/')
+def index():
+    readme_file = open("apinfo.md", "r")
+    md_template = markdown.markdown(readme_file.read(), extensions = ["fenced_code"])
+    return md_template
 
 #FRASES
 #Phrases by episodes
