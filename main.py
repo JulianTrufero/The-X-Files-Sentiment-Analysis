@@ -22,7 +22,6 @@ def phrase_by_charac(name):
 
 @app.route("/phrases/<character>/<episode>")
 def phrases(character, episode):
-    print('ok')
     phrase = sql.quote_ce(character, episode)
     return phrase
 
@@ -47,6 +46,36 @@ def modphrase():
     modification = request.form.get("modification")
 
     return sql.modifyphrase(episode,character,phrase,modification)
+
+#SENTIMENT ANALYSIS FUNCTIONS
+#Sentiment for episode and character
+
+@app.route("/sentiment/<character>/<episode>")
+def sentiment(character, episode):
+    sentiment = sql.quote_sent(character, episode)
+    return str(sentiment)
+
+#Mean sentiment for episode and character
+
+@app.route("/meansentiment/<character>/<episode>")
+def meansentiment(character, episode):
+    sentiment = sql.quote_sent(character, episode)
+    m = sum(sentiment)/len(sentiment)
+    return str(m)
+
+#Sentiment for both character and one episode
+
+@app.route("/sentiment/<character1>/<character2>/<episode>")
+def doub_sentiment(character1, character2, episode):
+    doub_sentiment = sql.quote_doublesent(character1, character2, episode)
+    return doub_sentiment
+
+#Mean sentiment both character and one episode
+
+@app.route("/doublemeansentiment/<character1>/<character2>/<episode>")
+def meansentiment2(character1, character2, episode):
+    meansentiment2 = sql.quote_mdoublesent(character1, character2, episode)
+    return meansentiment2
 
 if __name__ == '__main__':
     app.run(debug=True)
