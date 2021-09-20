@@ -19,13 +19,14 @@ def phrase_by_charac(name):
     return phrases
 
 #Phrases by character and episode
-"""
-@app.route("/phrases/<number>")
+
+@app.route("/phrases/<character>/<episode>")
 def phrases(character, episode):
     print('ok')
     phrase = sql.quote_ce(character, episode)
     return phrase
-"""
+
+
 #Insert phrase
 
 @app.route("/newphrase", methods=["POST"])
