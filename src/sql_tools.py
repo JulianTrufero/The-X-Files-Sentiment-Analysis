@@ -9,7 +9,14 @@ from textblob import TextBlob
 #General check function
 def check(something,string):
     """
+    Checks if some element belongs to a table in a database
+    Args:
+        something: what you want to check
+        string: the name of what you want to check
+    Returns:
+        True or False
     """
+
     if something == "episode":
         query = list(engine.execute(f"SELECT Episode FROM Episodes WHERE Episode = '{string}'"))
         if len(query) > 0:
@@ -35,6 +42,11 @@ def check(something,string):
 
 def tokenizer(txt):
     """
+    Transforms a text, taking out meaningless words, and converting the rest to its original form 
+    Args:
+        txt: any text
+    Returns:
+        A list with the tokenized words
     """
     nlp = spacy.load("en_core_web_sm")
     tokens = nlp(txt)
@@ -50,7 +62,13 @@ def tokenizer(txt):
 
 def polarity(phrase):
     """
+    Gets the sentiment of a phrase 
+    Args:
+        A phrase
+    Returns:
+        A measure of positiveness or negativeness of the phrase using TextBlob
     """
+
     blob = TextBlob(f"{phrase}")
     
     return blob.sentiment[0]
@@ -58,8 +76,14 @@ def polarity(phrase):
 #Phrases by character
 
 def quote_c(character):
+   """
+    Query the db for existence of a character and returns all its phrases 
+    Args:
+        character: name of the character
+    Returns:
+        A json format dataframe with all the phrases from that character.
     """
-    """
+
     if check('character', character):
         query = list(engine.execute(f"SELECT idCharacters FROM Characters WHERE `Character` = '{character}'"))
         c = query[0][0]
@@ -78,7 +102,13 @@ def quote_c(character):
 
 def quote_e(episode):
     """
+    Query the db for the existence of an episode and returns all its phrases 
+    Args:
+        episode: name of the episode
+    Returns:
+        A json format dataframe with all the phrases from that episode.
     """
+
     if check('episode', episode):
         query = list(engine.execute(f"SELECT idEpisodes FROM Episodes WHERE Episode = '{episode}'"))
         e = query[0][0]
@@ -98,7 +128,15 @@ def quote_e(episode):
 
 def quote_ce(character, episode):
     """
+    Query the db for existence of a character and an episode and returns all its phrases 
+    Args:
+        character: name of the character
+        episode: name of the episode
+    Returns:
+        A json format dataframe with all the phrases from that character in that episode.
     """
+
+
     if check('character', character):
         query = list(engine.execute(f"SELECT idCharacters FROM Characters WHERE `Character` = '{character}'"))
         c = query[0][0]
@@ -123,7 +161,15 @@ def quote_ce(character, episode):
 
 def insertphrase(episode,character,phrase):
     """
+    Insert a new episode and phrase in the database, wether the character already exists or not 
+    Args:
+        character: name of the character
+        episode: name of the episode
+        phrase: phrase you wish to insert
+    Returns:
+        A message indicating the phrase was correctly inserted.
     """
+
     if check('episode', episode) == False:
         engine.execute(f""" INSERT INTO Episodes (Episode) VALUES ('{episode}'); """)
         
@@ -146,7 +192,16 @@ def insertphrase(episode,character,phrase):
 
 def modifyphrase(episode,character,phrase,modification):
     """
+    Modiphies an episode and phrase in the database, for an especific character 
+    Args:
+        character: name of the character
+        episode: name of the episode
+        phrase: phrase you wish to modify
+        modification: modification you wish to perform
+    Returns:
+        A message indicating the phrase was correctly modified
     """
+
     
     if check('episode', episode):
         if check('character', character):
@@ -169,7 +224,13 @@ def modifyphrase(episode,character,phrase,modification):
 #Sentiment for episode and character
 
 def quote_sent(character, episode):
-    """
+   """
+    Gets the sentiment of a phrase in the database, for an especific character and episode
+    Args:
+        character: name of the character
+        episode: name of the episode
+    Returns:
+        A list with the measures of positivness or negativness for the phrases
     """
     if check('character', character):
         query = list(engine.execute(f"SELECT idCharacters FROM Characters WHERE `Character` = '{character}'"))
@@ -200,7 +261,15 @@ def quote_sent(character, episode):
 #Sentiment for both character and one episode
 
 def quote_doublesent(character1, character2, episode):
-    """
+   """
+    Gets the sentiment of a phrase in the database, for both characters and an especific episode
+    Args:
+        character1: name of the first character
+        character2: name of the second character
+        episode: name of the episode
+    Returns:
+        A a dictionary with the lists containing the measures of positivness or negativness for 
+        the phrases of each character
     """
     s_1 = quote_sent(character1, episode)
     s_2 = quote_sent(character2, episode)
@@ -215,7 +284,14 @@ def quote_doublesent(character1, character2, episode):
 #Mean sentiment for both character and one episode
 
 def quote_mdoublesent(character1, character2, episode):
-    """
+  """
+    Gets the mean sentiment of a phrase in the database, for both characters and an especific episode
+    Args:
+        character1: name of the first character
+        character2: name of the second character
+        episode: name of the episode
+    Returns:
+        A a dictionary with the mean positivness or negativness for the phrases of each character
     """
     s_1 = quote_sent(character1, episode)
     s_2 = quote_sent(character2, episode)
