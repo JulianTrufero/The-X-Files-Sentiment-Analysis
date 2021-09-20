@@ -204,10 +204,12 @@ def quote_doublesent(character1, character2, episode):
     """
     s_1 = quote_sent(character1, episode)
     s_2 = quote_sent(character2, episode)
-    double = {}
+    double = {f'{character1}': s_1, f'{character2}': s_2}
+
+    """
     double[f'{character1}'] = s_1
     double[f'{character2}'] = s_2
-    
+    """
     return double
 
 #Mean sentiment for both character and one episode
